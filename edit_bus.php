@@ -1,5 +1,35 @@
 <?php
-require_once('db.config.php');
+// include database connection file
+include_once("db.config.php");
+
+// update data buse
+if (isset($_POST['update'])) {
+    $id = $_POST['id'];
+
+    $nama_bus = $_POST['nama_bus'];
+    $tujuan = $_POST['tujuan'];
+    $biaya = $_POST['biaya'];
+
+    // update data bus
+    $result = mysqli_query($conn, "UPDATE data_bus SET nama_bus='$nama_bus',tujuan='$tujuan',biaya='$biaya' WHERE id=$id");
+
+    // Redirect to datapenumpang
+    header("Location: data_penumpang.php");
+}
+?>
+<?php
+// Display selected user data based on id
+// Getting id from url
+$id = $_GET['id'];
+
+// Fetech data bus based on id
+$result = mysqli_query($conn, "SELECT * FROM data_bus WHERE id=$id");
+
+while ($user_data = mysqli_fetch_array($result)) {
+    $nama_bus = $user_data['nama_bus'];
+    $tujuan = $user_data['tujuan'];
+    $biaya = $user_data['biaya'];
+}
 ?>
 <!DOCTYPE html>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
@@ -71,49 +101,46 @@ require_once('db.config.php');
         </nav>
     </section>
     <div class="container">
-        <a href="add_bus.php" class="btn btn-primary mb-3">Tambah</a>
-        <table id="example" class="table table-striped table-bordered" style="width:100%">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Nama PO</th>
-                    <th>Tujuan</th>
-                    <th>Biaya</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                $no = 1;
-                $sql = "SELECT * FROM data_bus";
-                $result = $conn->query($sql);
-                while ($row = $result->fetch_assoc()) {
-                ?>
-                    <tr>
-                        <td><?php echo $no++; ?></td>
-                        <!-- <td><?php echo $row['id']; ?></td> -->
-                        <td><?php echo $row['nama_bus']; ?></td>
-                        <td><?php echo $row['tujuan']; ?></td>
-                        <td><?php echo $row['biaya']; ?></td>
-                        <td>
-                            <a href="edit_bus.php?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-success" style="margin-right: 10px;">Edit</a>
-                            <a href="delete_bus.php?id=<?php echo $row['id']; ?>" onclick="return confirm('Are you sure you want to delete this item?');" class="btn btn-sm btn-danger">Hapus</a>
-                        </td>
-                    </tr>
-                <?php
-                }
-                $conn = null;
-                ?>
-            </tbody>
-        </table>
+        <div class="row">
+            <div class="col-12 mt-3">
+                <form action="edit_bus.php" method="POST">
+                    <h4>Form Tambah Data Bus</h4>
+                    <label for="">Nama PO</label>
+                    <input type="text" name="nama_bus" class="form-control" value=<?php echo $nama_bus; ?>>
+                    <label for="">Tujuan</label>
+                    <input type="text" name="tujuan" class="form-control" value=<?php echo $tujuan; ?>>
+                    <label for="">Biaya</label>
+                    <input type="text" name="biaya" class="form-control" value=<?php echo $biaya; ?>>
+                    <input type="hidden" name="id" value=<?php echo $_GET['id']; ?>>
+                    <input type="submit" name="update" class="form-control btn btn-primary mt-3" value="Tambah Buku">
+                </form>
+            </div>
+        </div>
     </div>
 
-    <script>
-        $(document).ready(function() {
-            $('#example').DataTable();
-        });
-    </script>
+    <!-- <a href="index.php">Home</a>
+    <br /><br />
 
+    <form name="update_user" method="post" action="edit.php">
+        <table border="0">
+            <tr>
+                <td>Nama PO</td>
+                <td><input type="text" name="name" value=<?php echo $nama_bus; ?>></td>
+            </tr>
+            <tr>
+                <td>Tujuan</td>
+                <td><input type="text" name="email" value=<?php echo $tujuan; ?>></td>
+            </tr>
+            <tr>
+                <td>Biaya</td>
+                <td><input type="text" name="mobile" value=<?php echo $biaya; ?>></td>
+            </tr>
+            <tr>
+                <td><input type="hidden" name="id" value=<?php echo $_GET['id']; ?>></td>
+                <td><input type="submit" name="update" value="Update"></td>
+            </tr>
+        </table>
+    </form> -->
 </body>
 
 </html>

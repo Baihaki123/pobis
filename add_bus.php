@@ -66,46 +66,47 @@ require_once('db.config.php');
                             <a class="nav-link px-md-4" href="#">Data Pemesanan</a>
                         </li>
                     </ul>
+                    <!-- <div class="d-flex">
+                        <a class="btn btn-get-started btn-get-started-purple text-white" href="#">Get Started</a>
+                    </div> -->
                 </div>
             </div>
         </nav>
     </section>
     <div class="container">
-        <a href="add_bus.php" class="btn btn-primary mb-3">Tambah</a>
-        <table id="example" class="table table-striped table-bordered" style="width:100%">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Nama PO</th>
-                    <th>Tujuan</th>
-                    <th>Biaya</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
+        <div class="row">
+            <div class="col-12 mt-3">
+                <form action="add_bus.php" method="POST">
+                    <h4>Form Tambah Data Bus</h4>
+                    <label for="">Nama PO</label>
+                    <input type="text" name="nama_bus" class="form-control">
+                    <label for="">Tujuan</label>
+                    <input type="text" name="tujuan" class="form-control">
+                    <label for="">Biaya</label>
+                    <input type="text" name="biaya" class="form-control">
+                    <input type="submit" name="Submit" class="form-control btn btn-primary mt-3" value="Tambah Buku">
+                </form>
+
                 <?php
-                $no = 1;
-                $sql = "SELECT * FROM data_bus";
-                $result = $conn->query($sql);
-                while ($row = $result->fetch_assoc()) {
-                ?>
-                    <tr>
-                        <td><?php echo $no++; ?></td>
-                        <!-- <td><?php echo $row['id']; ?></td> -->
-                        <td><?php echo $row['nama_bus']; ?></td>
-                        <td><?php echo $row['tujuan']; ?></td>
-                        <td><?php echo $row['biaya']; ?></td>
-                        <td>
-                            <a href="edit_bus.php?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-success" style="margin-right: 10px;">Edit</a>
-                            <a href="delete_bus.php?id=<?php echo $row['id']; ?>" onclick="return confirm('Are you sure you want to delete this item?');" class="btn btn-sm btn-danger">Hapus</a>
-                        </td>
-                    </tr>
-                <?php
+
+                // Check If form submitted, insert form data into users table.
+                if (isset($_POST['Submit'])) {
+                    $nama_bus = $_POST['nama_bus'];
+                    $tujuan = $_POST['tujuan'];
+                    $biaya = $_POST['biaya'];
+
+                    // include database connection file
+                    include_once("db.config.php");
+
+                    // Insert user data into table
+                    $result = mysqli_query($conn, "INSERT INTO data_bus(nama_bus,tujuan,biaya) VALUES('$nama_bus','$tujuan','$biaya')");
+
+                    // Show message when user added
+                    echo "Data Bus berhasil ditambahkan. <a href='data_penumpang.php'>View Data Bus</a>";
                 }
-                $conn = null;
                 ?>
-            </tbody>
-        </table>
+            </div>
+        </div>
     </div>
 
     <script>
